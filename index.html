@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>LABYU</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body {
+      background-color: #f8f9fa; /* Light background for better visibility */
+    }
+    .card {
+      width: 100%; 
+      max-width: 600px; 
+    }
+    button {
+      width: 100px;
+    }
+    .button-container {
+      position: relative;
+      height: 400px;
+      width: 100%;
+      max-width: 600px; 
+      margin: 20px auto; 
+    }
+    .btn-dark {
+      position: absolute;
+    }
+    #random-image {
+      max-width: 100px; /* Set a small size for the image */
+      display: none; /* Hide initially */
+      position: absolute; /* Position fixed within the container */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container d-flex justify-content-center align-items-center min-vh-100 flex-column">
+    <div class="card">
+      <img class="card-img-top img-fluid" src="STAR.png" alt="Card image">
+    </div>
+
+    <div class="mt-3 button-container">
+      <button type="button" class="btn-dark btn" id="yes-button">YES</button>
+      <button type="button" class="btn-dark btn" id="no-button" style="left: 120px;">NO</button>
+    </div>
+
+    <img id="random-image" src="" alt="Random Image">
+  </div>
+
+  <script>
+    const noButton = document.getElementById("no-button");
+    const randomImage = document.getElementById("random-image");
+    const container = document.querySelector(".button-container");
+
+    const images = [
+      'sad4.jpg', // Replace with your actual image URLs
+      'sad3.jpg',
+      'sadd.jpg',
+      'sad.jpg',
+      'sad1.png'
+    ];
+
+    let distanceIncrement = 50; // Increment for image movement
+    let scaleFactor = 1; // Factor to increase image size
+
+    noButton.addEventListener("click", function() {
+      // Show a random image
+      const randomIndex = Math.floor(Math.random() * images.length);
+      randomImage.src = images[randomIndex];
+
+      // Get container dimensions
+      const containerWidth = container.offsetWidth;
+      const containerHeight = container.offsetHeight;
+
+      // Calculate random position for the image
+      const randomX = Math.floor(Math.random() * (containerWidth - randomImage.offsetWidth));
+      const randomY = Math.floor(Math.random() * (containerHeight - randomImage.offsetHeight));
+
+      // Set image position, making it farther away based on distanceIncrement
+      randomImage.style.left = `${randomX + distanceIncrement}px`;
+      randomImage.style.top = `${randomY + distanceIncrement}px`;
+
+      // Update the scale of the image
+      scaleFactor += 0.1; // Increase scale factor to make the image larger
+      randomImage.style.transform = `scale(${scaleFactor})`;
+
+      randomImage.style.display = "block"; 
+
+      // Calculate random position for the NO button
+      let buttonX, buttonY;
+      
+      // Function to check overlap
+      function isOverlapping() {
+        const imgRect = randomImage.getBoundingClientRect();
+        const btnRect = noButton.getBoundingClientRect();
+
+        return !(
+          imgRect.right < btnRect.left ||
+          imgRect.left > btnRect.right ||
+          imgRect.bottom < btnRect.top ||
+          imgRect.top > btnRect.bottom
+        );
+      }
+
+      // Keep repositioning the button until it's not overlapping
+      do {
+        buttonX = Math.floor(Math.random() * (containerWidth - noButton.offsetWidth));
+        buttonY = Math.floor(Math.random() * (containerHeight - noButton.offsetHeight));
+
+        // Set the NO button position
+        noButton.style.left = `${buttonX}px`;
+        noButton.style.top = `${buttonY}px`;
+      } while (isOverlapping()); // Repeat if overlapping
+    });
+  </script>
+
+</body>
+</html>
